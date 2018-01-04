@@ -6,9 +6,9 @@ class BinaryMinHeap
     
     @store = Array.new
     
-    @store.each_with_index do |int, idx| 
-      prc.call(int, @store[idx + 1])
-    end 
+    # @store.each_with_index do |int, idx| 
+    #   prc.call(int, @store[idx + 1])
+    # end 
     
     @store
   end
@@ -29,6 +29,9 @@ class BinaryMinHeap
 
   def push(val)
     @store.push(val)
+    child_idx = peek
+    self.class.heapify_up(@store, child_idx)
+    
   end
 
   public
@@ -49,8 +52,9 @@ class BinaryMinHeap
   
   # come back to handling the proc
   def self.heapify_down(array, parent_idx, len = array.length, &prc)
-    heaped = false 
+    prc ||= Proc.new { |x, y| x <=> y }
     
+    heaped = false 
     until heaped 
       heaped = true
       child_idxs = self.child_indices(len, parent_idx)
@@ -60,7 +64,8 @@ class BinaryMinHeap
         parent = array[parent_idx]
       end
       
-      if parent > array[smallest_child_idx] 
+      # if parent > array[smallest_child_idx] 
+      if prc.call(parent_idx, smallest_child_idx) == -1
         self.swap(array, parent_idx, smallest_child_idx)
         parent_idx = smallest_child_idx
 
@@ -72,11 +77,27 @@ class BinaryMinHeap
   end
   # come back to handling the proc
   def self.heapify_up(array, child_idx, len = array.length, &prc)
-    parent_idx = self.parent_index(child_idx)
+    prc ||= Proc.new { |x, y| x <=> y }
+    
+    heaped = false 
+    until heaped 
+      heaped = true
+      
+      child_idx > 0 ? parent_idx = self.parent_index(child_idx) : nil
+      
+      # if array[parent_idx] > array[child_idx] 
+      if prc.call(parent_idx, child_idx) == -1
+        self.swap(array, parent_idx, child_idx)
+        child_idx = parent_idx
+        heaped = false 
+      end 
+    end 
+    
+    array
   end
   
-  def self.swap(array, x, y)
-    array[x], array[y] = array[y], array[x] 
+  def self.swap(arr, x, y)
+    arr[x], arr[y] = arr[y], arr[x] 
   end
   
 end
