@@ -1,6 +1,6 @@
 require_relative "heap"
 
-class Array
+class Array < BinaryMinHeap
   def heap_sort!
   end
 end
