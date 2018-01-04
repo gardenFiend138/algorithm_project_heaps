@@ -128,4 +128,5 @@ class BinaryMinHeap
   
 end
 
-puts BinaryMinHeap.heapify_down([4,2,1,3,5,7,8,9], 0)
+puts 'This is a test of the BinaryMinHeap system: '
+p BinaryMinHeap.heapify_down([4,2,1,3,5,7,8,9], 0)

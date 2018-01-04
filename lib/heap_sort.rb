@@ -1,14 +1,25 @@
 require_relative "heap"
-
+require 'byebug'
 class Array
   def heap_sort!
     heap_partition = 0
-     
+    # puts 'starting self ----------'
+    # p self
+    # puts '-----------'
     while heap_partition < self.length
-      BinaryMinHeap.heapify_down(self[heap_partition..self.length], heap_partition)
+      # puts 'here is the array portion ---------'
+      # p self[heap_partition..self.length]
+      # puts '------------'
+      # byebug
+      p BinaryMinHeap.heapify_down(self[heap_partition...self.length], heap_partition)
+      # puts 'after being heaped self ----------'
+      # p self
+      # puts '-----------'
       heap_partition += 1 
     end 
-    
-    self
+    p BinaryMinHeap.heapify_down(self[heap_partition...self.length], heap_partition)
+    # puts 'return self------------'
+    # p self
+    # self
   end
 end
