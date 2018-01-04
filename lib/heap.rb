@@ -2,13 +2,15 @@ class BinaryMinHeap
   attr_reader :store, :prc
 
   def initialize(&prc)
-    prc ||= Proc.new { |x, y| x <=> y }
+    unless prc 
+      prc = Proc.new { |x, y| x <=> y }
+    end
     
     @store = Array.new
     
-    @store.each_with_index do |int, idx| 
-      prc.call(int, @store[idx + 1]) if idx < count
-    end 
+    # @store.each_with_index do |int, idx| 
+    #   prc.call(int, @store[idx + 1]) if idx < count
+    # end 
     
     @store
   end
@@ -53,22 +55,28 @@ class BinaryMinHeap
     (child_index - 1) / 2
   end
   
-  # come back to handling the proc
   def self.heapify_down(array, parent_idx, len = array.length, &prc)
     prc ||= Proc.new { |x, y| x <=> y }
-    
+
     heaped = false 
     until heaped 
       heaped = true
       child_idxs = self.child_indices(len, parent_idx)
+      parent = array[parent_idx]
       
-      unless child_idxs.length < 2
-        smallest_child_idx = (child_idxs[0] < child_idxs[1]) ? child_idxs[0] : child_idxs[1]
-        parent = array[parent_idx]
+      if child_idxs.length > 1
+        child1 = array[child_idxs[0]]
+        child2 = array[child_idxs[1]]
+        smallest_child_idx = prc.call(child1, child2) == -1 ? child_idxs[0] : child_idxs[1]  
+      elsif child_idxs.length == 1
+        smallest_child_idx = child_idxs[0]
+      else
+        smallest_child_idx = nil
       end
+      #try to abstract this out into a helper method
+      # smallest_child_idx = self.find_children(child_idxs, prc)
       
-      # if parent > array[smallest_child_idx] 
-      if prc.call(parent_idx, smallest_child_idx) == -1
+      if smallest_child_idx && prc.call(parent, array[smallest_child_idx]) == 1
         self.swap(array, parent_idx, smallest_child_idx)
         parent_idx = smallest_child_idx
 
@@ -79,7 +87,6 @@ class BinaryMinHeap
     array
   end
   
-  # come back to handling the proc  
   def self.heapify_up(array, child_idx, len = array.length, &prc)
     prc ||= Proc.new { |x, y| x <=> y }
     
@@ -89,8 +96,7 @@ class BinaryMinHeap
       
       child_idx > 0 ? parent_idx = self.parent_index(child_idx) : nil
       
-      # if prc.call(parent_idx, child_idx) == -1
-      if parent_idx && array[parent_idx] > array[child_idx]
+      if parent_idx && child_idx && prc.call(array[parent_idx], array[child_idx]) == 1
         self.swap(array, parent_idx, child_idx)
         child_idx = parent_idx
         heaped = false 
@@ -104,6 +110,22 @@ class BinaryMinHeap
     arr[x], arr[y] = arr[y], arr[x] 
   end
   
+  # def self.find_children(indices, &prc)
+  #   prc ||= Proc.new { |x, y| x <=> y }
+  # 
+  #   if child_idxs.length > 1
+  #     child1 = array[child_idxs[0]]
+  #     child2 = array[child_idxs[1]]
+  # 
+  #     smallest_child_idx = prc.call(child1, child2) == -1 ? child_idxs[0] : child_idxs[1]  
+  #   elsif child_idxs.length == 1
+  #     smallest_child_idx = child_idxs[0]
+  #   else
+  #     smallest_child_idx = nil
+  #   end
+  #   smallest_child_idx
+  # end
+  
 end
 
-# puts BinaryMinHeap.heapify_up([5,7,6], 2)
+puts BinaryMinHeap.heapify_down([4,2,1,3,5,7,8,9], 0)
