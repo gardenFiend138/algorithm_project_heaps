@@ -73,7 +73,7 @@ class BinaryMinHeap
       else
         smallest_child_idx = nil
       end
-      #try to abstract this out into a helper method
+      # try to abstract this out into a helper method
       # smallest_child_idx = self.find_children(child_idxs, prc)
       
       if smallest_child_idx && prc.call(parent, array[smallest_child_idx]) == 1
@@ -110,7 +110,7 @@ class BinaryMinHeap
     arr[x], arr[y] = arr[y], arr[x] 
   end
   
-  # def self.find_children(indices, &prc)
+  # def self.find_children(child_idxs, &prc)
   #   prc ||= Proc.new { |x, y| x <=> y }
   # 
   #   if child_idxs.length > 1
@@ -129,4 +129,5 @@ class BinaryMinHeap
 end
 
 puts 'This is a test of the BinaryMinHeap system: '
-p BinaryMinHeap.heapify_down([4,2,1,3,5,7,8,9], 0)
+p BinaryMinHeap.heapify_down([4,2,7,1,8,3,9,0,5], 0)
+# p BinaryMinHeap.heapify_down([4,2,1,3,5,7,8,9], 0)

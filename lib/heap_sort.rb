@@ -23,3 +23,6 @@ class Array
     # self
   end
 end
+# 
+# puts 'This is a test for heap_sort! '
+# p [4,2,7,1,8,3,9,0,5].heap_sort!
